@@ -1,0 +1,5 @@
+@import 'carbon-components-svelte/css/all.css';
+
+:root {
+    --cds-background: var(--cds-theme-g100);
+}
