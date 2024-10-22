@@ -1,9 +1,6 @@
 <script>
-    let theme = "white"; // "white" | "g10" | "g80" | "g90" | "g100"
-  
-    $: document.documentElement.setAttribute("theme", theme);
 
-    import { Tile } from "carbon-components-svelte";
+    import Card from "@smui/card";
 
     let message = "Loading...";
 
@@ -28,18 +25,15 @@
     loadDashboardMessage();
 </script>
 
-<div class="dashboard-container">
-    <Tile>
-        <h2>Dashboard</h2>
-        <p>{message}</p>
-    </Tile>
-</div>
+
+<Card variant="outlined" style="margin: 50px auto; max-width: 600px;">
+    <h2>Dashboard</h2>
+    <p>{message}</p>
+</Card>
+
 
 <style>
-    .dashboard-container {
-        padding: 2rem;
-        margin-top: 50px;
-        max-width: 500px;
-        margin: 50px auto;
+    h2 {
+        margin-bottom: 1rem;
     }
 </style>

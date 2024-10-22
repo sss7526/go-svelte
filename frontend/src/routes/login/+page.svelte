@@ -1,6 +1,7 @@
 <script>
-    import { TextInput } from "carbon-components-svelte";
-    import { Button } from "carbon-components-svelte";
+    import Button from "@smui/button";
+    import TextField from "@smui/textfield";
+    import FormField from "@smui/form-field"
 
     let username = "";
     let password = "";
@@ -29,32 +30,48 @@
 </script>
 
 
-<div class="bx--form-item">
+
+<div>
     {#if errorMessage !== ""}
-        <p class="bx--label--danger">{errorMessage}</p>
+        <p class="error">{errorMessage}</p>
     {/if}
 
     <form on:submit={handleLogin}>
-        <TextInput
+        <FormField>
+            <TextField
             bind:value={username}
-            id="username"
-            labelText="username"
-            placeholder="Enter username"
+            label="username"
+            variant="outlined"
+            required
         />
-        <TextInput
-            bind:value={password}
-            id="password"
+        </FormField>
+            <TextField
             type="password"
-            labelText="Password"
-            placeholder="Enter password"
+            bind:value={password}
+            label="Password"
+            variant="outlined"
+            required
         />
-        <Button kind="primary" type="submit">Login</Button>
+
+        <Button color="primary" type="submit" variant="raised">
+            Login
+        </Button>
     </form>
 </div>
 
 <style>
-    .bx--form-item {
+    .error {
+        color: red;
+        margin-bottom: 1rem;
+    }
+
+    form {
         max-width: 400px;
         margin: 100px auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+        /* width: 100%; */
     }
 </style>
