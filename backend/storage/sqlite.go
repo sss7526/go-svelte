@@ -35,7 +35,7 @@ func InitSQLiteDB() (*sql.DB, error) {
 
 func InsertUser(username, hashedPassword, role string) error {
 	query := `
-		INSERT INTO users (username, password, role)
+		INSERT INTO user (username, password, role)
 		VALUES (?, ?, ?)	
 	`
 	
@@ -54,7 +54,7 @@ func FindUserByUsername(username string) (User, error) {
 	var user User
 	query := `
 		SELECT username, password, role
-		FROM users
+		FROM user
 		WHERE username = ?
 	`
 
