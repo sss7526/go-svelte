@@ -158,3 +158,6 @@ dist
 
 # custom
 .env
+
+*.db
+server
