@@ -1,13 +1,16 @@
 package main
 
 import (
-	"log"
 	"fmt"
+	"go-svelte/storage"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"encoding/json"
+
+	// "encoding/json"
 	"time"
+
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 )
@@ -30,22 +33,14 @@ func init() {
 }
 
 
-var mockUsername = "admin"
-var mockPassword = "password"
+// var mockUsername = "admin"
+// var mockPassword = "password"
 
 const sessionExpiration = time.Minute
 
-type Credentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-// func checkAuth(r *http.Request) bool {
-// 	c, err := r.Cookie("AuthToken")
-// 	if err != nil || c.Value != "valid-session-token" {
-// 		return false
-// 	}
-// 	return true
+// type Credentials struct {
+// 	Username string `json:"username"`
+// 	Password string `json:"password"`
 // }
 
 func fileExists(path string) bool {
@@ -54,8 +49,12 @@ func fileExists(path string) bool {
 }
 
 func main() {
+	_, err := storage.InitSQLiteDB()
+	if err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
+
 	fs := http.FileServer(http.Dir("../frontend/build"))
-	// http.Handle("/", fs)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		path := filepath.Join("../frontend/build", r.URL.Path)
@@ -69,62 +68,56 @@ func main() {
 	})
 
 	http.HandleFunc("/api/login", loginHandler)
+	http.HandleFunc("/api/signup", signupHandler)
 	http.HandleFunc("/api/check-auth", checkAuthHandler)
 	http.HandleFunc("/api/dashboard", dashboardHandler)
 	http.HandleFunc("/api/logout", logoutHandler)
 
-	// http.HandleFunc("/api/hello", helloHandler)
-
 	log.Println("Server started on :8080")
-	err := http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-// func helloHandler(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.Write([]byte(`{"message":"Hello from Go"}`))
-// }
+// func loginHandler(w http.ResponseWriter, r *http.Request) {
+// 	if r.Method != http.MethodPost {
+// 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+// 		return
+// 	}
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
-	}
+// 	var creds Credentials
+// 	err := json.NewDecoder(r.Body).Decode(&creds)
+// 	if err != nil {
+// 		http.Error(w, "Bad Request", http.StatusBadRequest)
+// 		return
+// 	}
 
-	var creds Credentials
-	err := json.NewDecoder(r.Body).Decode(&creds)
-	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
-		return
-	}
+// 	if creds.Username == mockUsername && creds.Password == mockPassword {
+// 		session, _ := store.Get(r, "session")
 
-	if creds.Username == mockUsername && creds.Password == mockPassword {
-		session, _ := store.Get(r, "session")
+// 		session.Values["authenticated"] = true
+// 		session.Values["username"] = creds.Username
+// 		session.Options = &sessions.Options{
+// 			Path:		"/",
+// 			MaxAge: 	int(sessionExpiration.Seconds()), 
+// 			HttpOnly: 	true,
+// 			SameSite:	http.SameSiteStrictMode,
+// 		}
 
-		session.Values["authenticated"] = true
-		session.Values["username"] = creds.Username
-		session.Options = &sessions.Options{
-			Path:		"/",
-			MaxAge: 	int(sessionExpiration.Seconds()), 
-			HttpOnly: 	true,
-			SameSite:	http.SameSiteStrictMode,
-		}
-
-		err := session.Save(r, w)
-		if err != nil {
-			log.Println("Error saving session:", err)
-			http.Error(w, "Unable to save session", http.StatusInternalServerError)
-			return
-		}
+// 		err := session.Save(r, w)
+// 		if err != nil {
+// 			log.Println("Error saving session:", err)
+// 			http.Error(w, "Unable to save session", http.StatusInternalServerError)
+// 			return
+// 		}
 		
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, `{"message": "Login successful"}`)
-	} else {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-	}
-}
+// 		w.WriteHeader(http.StatusOK)
+// 		fmt.Fprintf(w, `{"message": "Login successful"}`)
+// 	} else {
+// 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+// 	}
+// }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "session")
@@ -145,12 +138,6 @@ func checkAuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, `{"authenticated": true}`)
-	// if checkAuth(r) {
-	// 	w.WriteHeader(http.StatusOK)
-	// 	fmt.Fprint(w, `{"authenticated": true}`)
-	// } else {
-	// 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
-	// }
 }
 
 func dashboardHandler(w http.ResponseWriter, r *http.Request) {
