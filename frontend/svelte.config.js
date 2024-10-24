@@ -8,7 +8,7 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter({
 			pages: 'build',
-			assests: 'build',
+			assets: 'build',
 			fallback: 'index.html'
 		}),
 	}

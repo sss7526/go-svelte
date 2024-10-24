@@ -135,6 +135,7 @@ func checkAuthHandler(w http.ResponseWriter, r *http.Request) {
 	auth, ok := session.Values["authenticated"].(bool)
 	if !ok || !auth {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, `{"authenticated": true}`)

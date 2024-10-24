@@ -9,34 +9,24 @@
     export let status;
   </script>
   
-  <main class="error-page">
-    <h1>{status}</h1> <!-- Display error code like 404 -->
-    <p>{error.message || 'Something went wrong.'}</p>
-  
-    <a href="/" class="btn btn-primary">Return to Home</a> <!-- Back to Home button -->
+  <main class="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <h1 class="text-4xl mb-4">{status}</h1>
+    <p class="mb-4">{error.message || 'Page not found.'}</p>
+    <a href="/" class="btn btn-primary">Return to Home</a>
   </main>
   
-  <!-- Styling for the 404 page -->
   <style>
-    .error-page {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
     }
   
-    h1 {
-      font-size: 4rem;
-    }
-  
-    p {
-      margin-top: 1.5rem;
-      font-size: 1.25rem;
-    }
-  
-    a {
-      margin-top: 2rem;
+    .btn:hover {
+      background-color: #0056b3;
     }
   </style>
