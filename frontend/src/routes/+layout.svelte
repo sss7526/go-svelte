@@ -53,7 +53,12 @@
     onMount(() => {
       checkAuth();  // Run auth check once page loads.
     });
+
+    import '../app.css';
   </script>
+
+  <slot />
+
   {#if errorMessage}
     <p class="text-red-500">{errorMessage}</p>
   {/if}
