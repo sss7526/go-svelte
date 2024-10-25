@@ -35,7 +35,7 @@
 </script>
 
 <!-- Login/Signup Form -->
-<div class="w-full max-w-md p-8 bg-white rounded shadow">
+<div class="w-full max-w-md p-8 bg-base-300 rounded shadow">
   <h2 class="text-2xl mb-4">{isSignUp ? 'Sign Up' : 'Login'}</h2>
 
   {#if errorMessage}

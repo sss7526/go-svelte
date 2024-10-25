@@ -2,7 +2,7 @@
   import '../../app.css';  // Import TailwindCSS and DaisyUI
 </script>
 
-<main class="flex items-center justify-center h-screen bg-gray-100">
+<main class="flex items-center justify-center h-screen">
   <!-- The login/signup form will render dynamically inside this slot -->
   <slot />
 </main>
@@ -14,6 +14,6 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    /* background-color: #181616; */
   }
 </style>
