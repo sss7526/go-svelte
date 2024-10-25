@@ -63,6 +63,7 @@ func main() {
 	http.HandleFunc("/api/check-auth", checkAuthHandler)
 	http.HandleFunc("/api/dashboard", dashboardHandler)
 	http.HandleFunc("/api/logout", logoutHandler)
+	// http.Handle("/_app/", http.StripPrefix("/_app/", http.FileServer(http.Dir("../frontend/build/_app"))))
 
 	log.Println("Server started on :8080")
 	err = http.ListenAndServe(":8080", nil)

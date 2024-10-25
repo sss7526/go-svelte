@@ -64,7 +64,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkAuthHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Request: %+v\n", r)
+	// log.Printf("Request: %+v\n", r)
 	session, _ := store.Get(r, "session")
 	auth, ok := session.Values["authenticated"].(bool)
 	if !ok || !auth {

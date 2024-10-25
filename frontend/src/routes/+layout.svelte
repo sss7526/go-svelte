@@ -1,7 +1,8 @@
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import { page } from '$app/stores'; // Store to watch changes in route state
+    import { page } from '$app/stores';
+    // import { page } from '$app/stores'; // Store to watch changes in route state
   
     // const authRouteExceptions = ['/login', '/signup'];  // Routes that don't need auth
   
@@ -9,6 +10,10 @@
     let isAuthenticated = false;
     let authChecked = true;
     let open = true; // Drawer open/close state
+
+    $: currentPath = $page.url.pathname;
+
+    let errorMessage;
   
     // Function to check authentication status via API
     async function checkAuth() {
@@ -23,13 +28,20 @@
           isAuthenticated = session.authenticated;
         } else {
           isAuthenticated = false;
+          throw new Error("Unauthorized");
         }
   
         // // Redirect to /login if not authenticated and if not on a public page
         // if (!isAuthenticated && !authRouteExceptions.includes(page.url.pathname)) {
         //   goto('/login');
         // }
-      } catch (err) {
+      } catch (error) {
+
+        console.error("check auth failed:", error);
+        errorMessage = error.errorMessage;
+        isAuthenticated = false;
+      } finally {
+
         authChecked = true;
         // console.error('Authentication check failed:', error);
         if (!isAuthenticated && window.location.pathname !== '/login') {
@@ -42,6 +54,9 @@
       checkAuth();  // Run auth check once page loads.
     });
   </script>
+  {#if errorMessage}
+    <p class="text-red-500">{errorMessage}</p>
+  {/if}
   
   {#if authChecked}
     {#if isAuthenticated}
@@ -64,7 +79,14 @@
         </div>
       </div>
     {/if}
+
+    {#if !isAuthenticated && currentPath === '/login'}
+      <slot />
+    {/if}
+
   {/if}
+
+  
   
   <style>
     /* Simple styling for the content inside Drawer */
