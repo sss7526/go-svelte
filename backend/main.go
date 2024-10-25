@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"go-svelte/storage"
 	"log"
 	"net/http"
@@ -32,16 +32,7 @@ func init() {
 	store = sessions.NewCookieStore([]byte(sessionKey))
 }
 
-
-// var mockUsername = "admin"
-// var mockPassword = "password"
-
 const sessionExpiration = time.Minute
-
-// type Credentials struct {
-// 	Username string `json:"username"`
-// 	Password string `json:"password"`
-// }
 
 func fileExists(path string) bool {
 	_, err := os.Stat(path)
@@ -78,76 +69,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-// func loginHandler(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method != http.MethodPost {
-// 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-// 		return
-// 	}
-
-// 	var creds Credentials
-// 	err := json.NewDecoder(r.Body).Decode(&creds)
-// 	if err != nil {
-// 		http.Error(w, "Bad Request", http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	if creds.Username == mockUsername && creds.Password == mockPassword {
-// 		session, _ := store.Get(r, "session")
-
-// 		session.Values["authenticated"] = true
-// 		session.Values["username"] = creds.Username
-// 		session.Options = &sessions.Options{
-// 			Path:		"/",
-// 			MaxAge: 	int(sessionExpiration.Seconds()), 
-// 			HttpOnly: 	true,
-// 			SameSite:	http.SameSiteStrictMode,
-// 		}
-
-// 		err := session.Save(r, w)
-// 		if err != nil {
-// 			log.Println("Error saving session:", err)
-// 			http.Error(w, "Unable to save session", http.StatusInternalServerError)
-// 			return
-// 		}
-		
-// 		w.WriteHeader(http.StatusOK)
-// 		fmt.Fprintf(w, `{"message": "Login successful"}`)
-// 	} else {
-// 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-// 	}
-// }
-
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "session")
-	session.Options.MaxAge = -1
-	if err := session.Save(r, w); err != nil {
-		http.Error(w, "Failed to logout", http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, `{"message": "Logged out successfully"}`)
-}
-
-func checkAuthHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "session")
-	auth, ok := session.Values["authenticated"].(bool)
-	if !ok || !auth {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, `{"authenticated": true}`)
-}
-
-func dashboardHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "session")
-	auth, ok := session.Values["authenticated"].(bool)
-	if !ok || !auth {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(`{"message": "Hello from the Go Dashboard!"}`))
 }

@@ -1,12 +1,14 @@
 <script>
-  import '../../app.css'; // Correct path if necessary
+  import '../../app.css';  // Import TailwindCSS and DaisyUI
 </script>
 
 <main class="flex items-center justify-center h-screen bg-gray-100">
+  <!-- The login/signup form will render dynamically inside this slot -->
   <slot />
 </main>
 
 <style>
+  /* Center Content for login/signup pages */
   main {
     display: flex;
     justify-content: center;
